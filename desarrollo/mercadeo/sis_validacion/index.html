@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrusel de Preguntas</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <style>
+        /* Estilos generales */
+        body, html {
+            margin: 0;
+            border: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(to right, #01203a, #0b72b5);
+            overflow: hidden;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            letter-spacing: 0.8px;
+            transform: scaleX(1.1); /* Estira las letras horizontalmente un 50% */
+            display: inline-block; /* Necesario para aplicar la transformación */
+            overflow: hidden;
+        }
+        .carousel {
+            padding-top: 5%;
+            padding-left: 7%;
+            padding-right: 7%;
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            color: white;
+        }
+        .main {
+            padding: 0;
+        }
+        .p-2 {
+            margin-left: 10%;
+            margin-right: 10%;
+        }
+        .carousel-item {
+            align-content: center;
+            display: none;
+        }
+        .carousel-item.active {
+            display: block;
+        }
+        .img-SL {
+            width: 250px; /* Ajusta el ancho según sea necesario */
+            height: auto;
+        }
+        .boton-container {
+            display: flex;
+            padding-top: 110px;
+        }
+        .botones {
+            display: flex;
+            flex-direction: column;
+            gap: 5px; /* Espacio entre los botones */
+            margin-top: 22px;
+            margin-left: 80px; /* Ajusta el margen izquierdo para moverlos un poco a la derecha */
+        }
+        .respuesta-button {
+            display: block;
+            width: 29%; /* Hace que el botón ocupe el ancho completo del contenedor */
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            padding: 9px; /* Aumenta el espacio interno de los botones */
+            border: 1px solid; /* Color de borde gris */
+            border-radius: 18px;
+            background: #aeb2c9; /* Fondo gris claro */
+            color: #101438ef; /* Color del texto */
+            font-weight: bold;
+            font-size: 1.4rem; /* Tamaño de fuente del texto */
+            transition: background 0.3s, color 0.3s;
+        }
+        .respuesta-button:hover {
+            background: #e18721; /* Fondo gris más oscuro al pasar el mouse */
+        }
+        .respuesta-button.selected {
+            background: #5b5b5c; /* Fondo azul oscuro cuando seleccionado */
+            color: #fff; /* Texto blanco cuando seleccionado */
+        }
+        .btn_comenzar {
+            width: 12%; /* Hace que el botón ocupe el ancho completo del contenedor */
+            margin-bottom: 0.1rem;
+            cursor: pointer;
+            padding: 12px; /* Aumenta el espacio interno de los botones */
+            border-radius: 30px;
+            background: #479dd6; /* Fondo gris claro */
+            color: #ffffff; /* Color del texto */
+            font-size: 1.2rem; /* Tamaño de fuente del texto */
+            transform: scaleY(1.2); /* Ajusta este valor según tus necesidades */
+            transition: background 0.3s, color 0.3s;
+            display: block; 
+            margin: 0 auto;
+        }
+        .btn_comenzar:hover {
+            background: #e18721; /* Fondo gris más oscuro al pasar el mouse */
+        }
+        .pregunta-label {
+            font-size: 29px;
+            margin-bottom: 0; /* Ajusta el espacio debajo de la pregunta */
+            margin-top: 30px;
+        }
+        .num-label {
+          font-family: "Montserrat", sans-serif;
+          font-size: 50px;
+          margin-right: 2%;
+          font-weight: bold;
+          font-style: normal;
+        }
+        .pregunta {
+            display: flex;
+            align-items: center; /* Alinea verticalmente ambos labels */
+        }
+        .comienzo-titulo {
+            font-size: 40px; /* Ajusta el espacio debajo de la pregunta */
+            padding-top: 50px;
+            padding-left: 5%;
+            padding-right: 5%;
+            text-align: center;
+            font-weight: bold; /*Hace el texto Negrita*/
+        }
+        .comienzo {
+            font-size: 28px;
+            font-style: italic; /* Hace que el texto sea cursiva */
+            padding-top: 20px;
+            padding-left: 5%;
+            padding-right: 5%;
+            text-align: left;
+        }
+        .progress-container {
+            width: 260px;
+            height: 300px;
+            background-color: #baccd9a4;
+            margin: 20px;
+            display: flex;
+            flex-direction: column-reverse;
+            border-radius: 15px;
+            align-self: center;
+            box-shadow: 0px 4px 10px rgb(0, 0, 0); /* Sombra para un efecto 3D */
+        }
+        .progress-segment {
+            width: 100%;
+            transition: height 0.5s ease;
+        }
+        #segment-red {
+            border-radius: 0 0 15px 15px;
+        }
+        #segment-green {
+          border-radius: 15px 15px 0 0;
+        }
+        .porcentaje {
+            font-size: 50px;
+        }
+        .titulo {
+            font-size: 32px;
+        }
+        .titulo1 {
+            font-size: 25px;
+        }
+        .botonEnviar {
+            font-size: 18px;
+            box-shadow: 0px 1px 4px 0px rgba(252, 252, 252, 0.6);
+            border-radius: 300px 300px 300px 300px;
+            width: 143px;
+            height: 38px;
+            padding: 10px 50px;
+            margin-top: 2%;
+            text-decoration: none;
+            border: 2px solid #f8f9fa;
+            margin-left: 42%;
+            color: #fbfcfd;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .botonEnviar:hover {
+            background: #e18721; /* Fondo gris más oscuro al pasar el mouse */
+        }
+        .botonEnviar.selected {
+            background: #5b5b5c; /* Fondo azul oscuro cuando seleccionado */
+            color: #130f0f; /* Texto blanco cuando seleccionado */
+        }
+        .progress-wrapper {
+            position: center;
+            margin-top: 20px; /* Espacio entre el contenido y la barra de progreso */
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+        .progress-container-outer {
+            width: 80%;
+            max-width: 600px;
+            height: 9px;
+            background-color: #ffffff8e;
+            border-radius: 20px;
+            padding: 3px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .progress-container-inner {
+            width: 100%;
+            height: 100%;
+            background-color: #05010100;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .progress-container-small {
+            display: flex; /* Coloca los segmentos en línea */
+            width: 100%; /* Asegura que la barra ocupe el 100% del contenedor */
+            height: 10px; /* Ajustamos la altura de la barra */
+        }
+        .progress-segment-small {
+            height: 100%; /* Asegura que cada segmento ocupe toda la altura del contenedor */
+            transition: width 0.5s ease; /* Transición suave para los cambios de ancho */
+        }
+        #segment-red-small {
+            background-color: red;
+        }
+        #segment-orange-small {
+            background-color: orange;
+        }
+        #segment-yellow-small {
+            background-color: yellow;
+        }
+        #segment-green-small {
+            background-color: #73c021;
+        }
+        .progress-text {
+            position: absolute;
+            top: -5px; /* Espaciado relativo, ajustable */
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px; /* Tamaño relativo al ancho de la pantalla */
+            text-align: center;
+            font-family: 'Roboto', sans-serif;
+            letter-spacing: 0.4px;
+        }
+        #progressBarWrapper {
+            display: none; /* Oculto inicialmente */
+        }
+        .checkboxs {
+            margin-left: 10px;
+        }
+        .progress-container {
+          width: 260px;
+          height: 300px;
+          background-color: #baccd9a4;
+          margin: 20px;
+          display: flex;
+          flex-direction: column-reverse;
+          border-radius: 15px;
+          align-self: center;
+          box-shadow: 0px 4px 10px rgb(0, 0, 0); /* Sombra para un efecto 3D */
+          position: relative; /* Necesario para posicionar la flecha dentro */
+      }
+
+      .flecha-container {
+          position: absolute;
+          right: -51.5%; /* Alinea la flecha fuera del contenedor de la barra */
+          transition: top 0.5s ease; /* Transición suave cuando la flecha se mueve */
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          }
+
+          .flechaIcon {
+            width: 40px;  /* Ajusta el tamaño según tus necesidades */
+            height: 2.5px;  /* Grosor de la línea */
+            background-color: black; 
+            margin-right: 5px;
+            margin-top: -8%;
+          }
+
+          .textFlecha {
+              font-size: 14px;
+              font-weight: bold;
+              color: #f9faf9;
+              margin-top: -8%;
+          }
+
+        /* Espacio para responsive personalizado */
+        @media (min-width: 1025px) and (max-width: 1400px) {
+          .img-SL {
+            width: 350px; /* Ajusta el ancho según sea necesario */
+          }
+          .barcol {
+            padding-right: 17%;
+            padding-bottom: 3%;
+          }
+          .progress-container-outer {
+            width: 90%;
+          }
+          .progress-container {
+              width: 300px;
+              height: 340px;
+          }
+          .respuesta-button {
+              width: 40%;
+              font-size: 1.6rem;
+          }
+          .pregunta-label {
+              font-size: 36px;
+              margin-top: 8%;
+          }
+          .botones {
+              margin-left: 60px;
+          }
+          .boton-container {
+              margin-top: auto; /* Ajusta el margen superior si es necesario */
+          }
+
+          .porcentaje {
+              font-size: 50px;
+          }
+          .titulo {
+              font-size: 40px;
+          }
+          .titulo1  {
+              font-size: 33px;
+          }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+        .progress-container-outer {
+            width: 80%;
+        }
+        .progress-container {
+            width: 230px;
+            height: 270px;
+        }
+        .respuesta-button {
+            width: 30%;
+            font-size: 1.3rem;
+        }
+        .pregunta-label {
+            font-size: 26px;
+            text-justify: auto;
+            margin-top: 20px;
+        }
+        .botones {
+            margin-left: 50px;
+        }
+        .boton-container {
+            margin-top: auto; /* Ajusta el margen superior si es necesario */
+        }
+        .btn_comenzar {
+            width: 20%; /* Hace que el botón ocupe el ancho completo del contenedor */
+        }
+        .porcentaje {
+            font-size: 40px;
+        }
+        .titulo {
+            font-size: 30px;
+        }
+        .titulo1  {
+            font-size: 23px;
+        }
+      }
+
+      @media (min-width: 481px) and (max-width: 768px) {
+        .progress-container-outer {
+            width: 90%;
+        }
+        .respuesta-button {
+            width: auto;
+            font-size: 1.1rem;
+        }
+        .pregunta-label {
+            text-justify: auto;
+            margin-top: 20px;
+            font-size: 21px;
+        }
+        .botones {
+            margin-left: auto;
+        }
+        .titulo {
+            font-size: 28px;
+        }
+        .titulo1  {
+            font-size: 21px;
+        }
+        .boton-container {
+            margin-top: auto; /* Ajusta el margen superior si es necesario */
+        }
+        .btn_comenzar {
+             width: auto; /* Hace que el botón ocupe el ancho completo del contenedor */
+        }
+        .progress-text {
+            font-size: 2vw; /* Ajusta el tamaño del texto en pantallas más pequeñas */
+        }
+        .progress-container {
+            width: 160px;
+            height: 200px;
+            margin: 20px;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+        .img-SL {
+            width: 230px; /* Ajusta el ancho según sea necesario */
+        }
+        .porcentaje {
+            font-size: 40px;
+        }
+        .barcol {
+            padding-right: 0;
+        }
+
+      }
+
+      @media (min-width: 318px) and (max-width: 480px) {
+        .progress-container-outer {
+            width: 95%;
+        }
+        .respuesta-button {
+            width: auto;
+            font-size: 1rem;
+        }
+        .pregunta-label {
+            font-size: 18.5px;
+            text-align: auto;
+            margin-top: 20px;
+        }
+        .botones {
+            margin-left: auto;
+        }
+        .boton-container {
+            margin-top: auto; /* Ajusta el margen superior si es necesario */
+        }
+        .btn_comenzar {
+            width: auto; /* Hace que el botón ocupe el ancho completo del contenedor */
+        }
+        .comienzo-titulo {
+            font-size: 25px; /* Ajusta el espacio debajo de la pregunta */
+        }
+        .titulo {
+            font-size: 22px;
+        }
+        .titulo1  {
+            font-size: 17px;
+        }
+        .comienzo {
+            font-size: 18px;
+        }
+        .progress-text {
+            font-size: 2.2vw; /* Ajusta el tamaño del texto en pantallas más pequeñas */
+        }
+        .progress-container {
+            width: 110px;
+            height: 150px;
+            margin: 20px;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+        .img-SL {
+            width: 200px; /* Ajusta el ancho según sea necesario */
+        }
+        .porcentaje {
+            font-size: 30px;
+        }
+        .p-2 {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+        .num-label {
+          font-size: 40px;
+        }
+        .barcol {
+            padding-right: 0;
+        }
+      }
+      
+      
+
+    </style>
+</head>
+<body>
+    <div id="carouselExampleFade" class="carousel slide carousel-fade col-sm-3 col-md-6 col-lg-12">
+
+        <main class="main col-sm-3 col-md-12 col-lg-12">
+            <div class="carousel-inner">
+                <header class="header">
+                    <img
+                        class="img-SL"
+                        src="https://static.wixstatic.com/media/a028e9_f785ec04904c477b9c8afdf69c4f3a1b~mv2.png/v1/fill/w_220,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/Hagamos%20Sinergia%20(4).png"
+                        alt=""
+                      />
+                </header>
+
+                <div class="carousel-item active" id="primero">
+                    <label class="comienzo-titulo"  
+                      >¿Tu gestión de nómina es eficiente como debería?</label
+                    >
+                    <br />
+                    <div>
+                      <label class="comienzo"
+                        >¡Descúbrelo con nuestro test especializado!</label
+                      >
+                    </div>
+                    <div class="boton-container">
+                      <button class="btn_comenzar" type="button" id="btn-start">
+                        COMENZAR
+                      </button>
+                    </div>
+                    <div>
+                      <img
+                        src="https://www.freepik.es/fotos-premium/retrato-joven-empresario-caucasico_300045363.htm#fromView=search&page=1&position=22&uuid=8883f5d0-c200-4498-8378-26aec8f37cf2"
+                        alt=""
+                      />
+                    </div>
+                </div>
+                <div class="questionario" id="questionario">
+                    <div class="carousel-item" id="pre1">
+                      <div class="p-2">
+                        <div class="pregunta">
+                          <label class="num-label">1.</label>
+                          <label class="pregunta-label">
+                            ¿El sistema de nómina <b>cumple con las normativas</b>
+                            colombianas para el <b>cálculo de impuestos</b>, como la retención en
+                            la fuente y el SENA?
+                          </label>
+                        </div>
+                        <div class="botones">
+                          <button class="respuesta-button" id="RC1">Sí</button>
+                          <button class="respuesta-button">No</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="carousel-item" id="pre2">
+                      <div class="p-2">
+                        <div class="pregunta">
+                          <label class="num-label">2.</label>
+                          <label class="pregunta-label">
+                            ¿Existen <b>procedimientos claros para la revisión</b> y
+                            validación de la nómina antes de su <b>procesamiento final</b>, según
+                            la normativa colombiana?
+                          </label>
+                        </div>
+                        <div class="botones">
+                          <button class="respuesta-button" id="RC2">Sí</button>
+                          <button class="respuesta-button">No</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="carousel-item" id="pre3">
+                      <div class="p-2">
+                        <div class="pregunta">
+                          <label class="num-label">3.</label>
+                          <label class="pregunta-label">
+                            ¿Existen mecanismos para asegurar que el proceso de nómina
+                            se adhiera a las <b>políticas internas</b> y a las <b>normativas
+                            laborales</b> y fiscales vigentes en Colombia?
+                          </label>
+                        </div>
+                        <div class="botones">
+                          <button class="respuesta-button" id="RC3">
+                            Sí, con controles y validaciones establecidos
+                          </button>
+                          <button class="respuesta-button" id="RC33">
+                            Sí, pero con controles limitados
+                          </button>
+                          <button class="respuesta-button">No</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="carousel-item" id="pre4">
+                      <div class="p-2">
+                        <div class="pregunta">
+                          <label class="num-label">4.</label>
+                          <label class="pregunta-label">
+                            ¿Qué tipo de capacitación reciben los empleados encargados
+                            del proceso de nómina en <b>relación con el software</b>?
+                          </label>
+                        </div>
+                        <div class="botones">
+                          <button class="respuesta-button">
+                            Capacitación continua
+                          </button>
+                          <button class="respuesta-button">Capacitación inicial</button>
+                          <button class="respuesta-button">
+                            No reciben capacitación específica
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="carousel-item" id="pre5">
+                      <div class="p-2">
+                        <div class="pregunta">
+                          <label class="num-label">5.</label>
+                          <label class="pregunta-label">
+                            ¿El sistema de nómina permite el acceso a <b>datos históricos
+                            y auditorías de cambios realizados</b>, conforme a la normativa de
+                            <b>protección de datos</b> en Colombia?
+                          </label>
+                        </div>
+                        <div class="botones">
+                          <button class="respuesta-button" id="RC5">Sí</button>
+                          <button class="respuesta-button">No</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="carousel-item" id="pre6">
+                      <div class="p-2">
+                        <div class="pregunta">
+                          <label class="num-label">6.</label>
+                          <label class="pregunta-label">
+                            ¿En la gestión interna de tu nómina cuentas con <b>procesos
+                            auditables</b> que <b>minimicen las probabilidades de sanciones</b>
+                            legales y económicas?
+                          </label>
+                        </div>
+                        <div class="botones">
+                          <button class="respuesta-button">Sí</button>
+                          <button class="respuesta-button">No</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="carousel-item" id="pre7">
+                      <div class="p-2">
+                        <div class="pregunta">
+                          <label class="num-label">7.</label>
+                          <label class="pregunta-label">
+                            ¿El sistema de nómina de la empresa está <b>automatizado y
+                            adaptado</b> a las normativas colombianas?
+                          </label>
+                        </div>
+                        <div class="botones">
+                          <button class="respuesta-button">Sí</button>
+                          <button class="respuesta-button">No</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="carousel-item" id="pre8">
+                      <div class="p-2">
+                        <div class="pregunta">
+                          <label class="num-label">8.</label>
+                          <label class="pregunta-label">
+                            ¿Con qué frecuencia se realizan <b>actualizaciones del
+                            sistema de nómina</b> para cumplir con los cambios en la
+                            legislación laboral y fiscal colombiana?
+                          </label>
+                        </div>
+                        <div class="botones">
+                          <button class="respuesta-button">Mensualmente</button>
+                          <button class="respuesta-button">Trimestralmente</button>
+                          <button class="respuesta-button">Anualmente</button>
+                          <button class="respuesta-button">Cuando es necesario</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="carousel-item" id="pre9">
+                      <div class="p-2">
+                        <div class="pregunta">
+                          <label class="num-label">9.</label>
+                          <label class="pregunta-label">
+                            ¿El sistema de nómina <b>integra adecuadamente</b> la información
+                            de asistencia y horas trabajadas, conforme a la ley
+                            colombiana?
+                          </label>
+                        </div>
+                        <div class="botones">
+                          <button class="respuesta-button">Mensualmente</button>
+                          <button class="respuesta-button">Trimestralmente</button>
+                          <button class="respuesta-button">Anualmente</button>
+                          <button class="respuesta-button" id="RC9">Cuando es necesario</button>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                <div class="carousel-item" id="ultimo">
+                    <div class="p-2 row d-flex">
+                      
+                          <!-- Primera columna -->
+                          <div class="titcol col-sm-3 col-md-6 col-lg-6">
+                            <h1 class="titulo" style="margin-top: 20%; color: #f7fafc; text-align: center;">
+                              <b>Estás llevando la gestión de nómina de tu empresa en:</b>
+                            </h1>
+                          </div>
+                    
+                          <!-- Segunda columna: Barra de progreso -->
+                          <div class="barcol col-sm-3 col-md-6 col-lg-6">
+                            <div class="col-md-12 col-sm-3 col-lg-12">
+                              <h4 style="text-align: center; font-weight: bold;">
+                                <span class="porcentaje" id="porcentajeFinal"></span>
+                              </h4>
+                              <center>
+                                <div class="progress-container text-center"> <!-- Añadido position: relative -->
+                                  <div class="progress-segment" id="segment-red"></div>
+                                  <div class="progress-segment" id="segment-orange"></div>
+                                  <div class="progress-segment" id="segment-yellow"></div>
+                                  <div class="progress-segment" id="segment-green"></div>
+
+                                  <!-- Flecha posicionada dentro del contenedor de la barra -->
+                                  <div class="flecha-container">
+                                    <div class="material-symbols-outlined flechaIcon" id="flecha"></div> <!-- Flecha -->
+                                    <div class="textFlecha" id="textoFlecha"></div> <!-- Texto al lado derecho de la flecha -->
+                                  </div>
+                                </div>
+                              </center>
+                            </div>
+                          </div>
+
+                        
+                    
+                        <!-- Segunda fila: Texto y botón debajo de las dos columnas -->
+
+                            <div class="col-md-12 col-sm-3 col-lg-12" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+                              <h4 class="titulo1">
+                                Te invitamos a conocer nuestro sistema de nómina que llevará<br>
+                                la gestión de tu empresa al 100%.
+                              </h4>
+                          
+                              <a class="botonEnviar" style="margin: 20px auto; text-align: center;" target="_blank" href="https://www.sinergylowells.com/calculadoras-liquidacioon-laboral-calcular-ibc">
+                                Demo
+                              </a>
+                            </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <Footer class="footer">
+                <div class="progress-wrapper" id="progressBarWrapper" style="position: relative;">
+                    <h6 class="progress-text">Barra de Puntaje Evaluación Nómina</h6>
+                    <div class="progress-container-outer">
+                        <div class="progress-container-inner">
+                            <div class="progress-container-small">
+                                <div class="progress-segment-small" id="segment-red-small"></div>
+                                <div class="progress-segment-small" id="segment-orange-small"></div>
+                                <div class="progress-segment-small" id="segment-yellow-small"></div>
+                                <div class="progress-segment-small" id="segment-green-small"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </Footer>
+        </main>
+       
+        
+
+    </div>
+     <!-- Lógica con JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const btnStart = document.getElementById("btn-start");
+        const carouselElement = document.getElementById("carouselExampleFade");
+        const carousel = new bootstrap.Carousel(carouselElement, {
+            interval: false,  // Desactiva el avance automático
+            keyboard: false   // Evita el avance con el teclado
+        });
+
+        const preguntasEspecificas = ['pre1', 'pre2', 'pre3', 'pre5', 'pre9'];
+        const respuestasEspecificas = ['RC1', 'RC2', 'RC3', 'RC33', 'RC5', 'RC9']; //ID de respuestas a correctas
+        const porcentajePorPregunta = 12;
+        let progressEspecificas = 0;
+        let respuestasRegistradas = {}; // Para almacenar las respuestas ya registradas
+
+        function calcularPorcentajeFinal() {
+            const porcentajeEspecifico = (progressEspecificas * porcentajePorPregunta);
+            document.getElementById("porcentajeFinal").innerText = `${Math.min(porcentajeEspecifico, 100)}%`;
+            actualizarBarraDeProgreso(porcentajeEspecifico);
+            actualizarBarraDeProgresoSmall(porcentajeEspecifico);
+            actualizarColorFlecha(porcentajeEspecifico);
+            actualizarPosicionFlecha(porcentajeEspecifico); // Mueve la flecha
+        }
+  
+          function actualizarBarraDeProgreso(porcentajeEspecifico) {
+              const segmentRed = document.getElementById("segment-red");
+              const segmentOrange = document.getElementById("segment-orange");
+              const segmentYellow = document.getElementById("segment-yellow");
+              const segmentGreen = document.getElementById("segment-green");
+  
+              const redHeight = Math.min(porcentajeEspecifico, 25);
+              const orangeHeight = Math.min(Math.max(porcentajeEspecifico - 25, 0), 25);
+              const yellowHeight = Math.min(Math.max(porcentajeEspecifico - 50, 0), 25);
+              const greenHeight = Math.max(porcentajeEspecifico - 55, 0);
+  
+              segmentRed.style.height = `${redHeight}%`;
+              segmentOrange.style.height = `${orangeHeight}%`;
+              segmentYellow.style.height = `${yellowHeight}%`;
+              segmentGreen.style.height = `${greenHeight}%`;
+  
+              segmentRed.style.background = `linear-gradient(to top, red ${redHeight}%, orange)`;
+              segmentOrange.style.background = `linear-gradient(to top, orange ${orangeHeight}%, yellow)`;
+              segmentYellow.style.background = `linear-gradient(to top, yellow ${yellowHeight}%, #deff33)`;
+              segmentGreen.style.background = `linear-gradient(to top, #deff33 ${Math.max(porcentajeEspecifico - 55, 0)}%, #9bff33)`;
+          }
+  
+            function actualizarBarraDeProgresoSmall(porcentajeEspecifico) {
+              const segmentRedSmall = document.getElementById("segment-red-small");
+              const segmentOrangeSmall = document.getElementById("segment-orange-small");
+              const segmentYellowSmall = document.getElementById("segment-yellow-small");
+              const segmentGreenSmall = document.getElementById("segment-green-small");
+
+              const redWidth = Math.min(porcentajeEspecifico, 25); // Rojo cubre los primeros 25%
+              const orangeWidth = Math.min(Math.max(porcentajeEspecifico - 25, 0), 25); // Naranja cubre del 25% al 50%
+              const yellowWidth = Math.min(Math.max(porcentajeEspecifico - 50, 0), 25); // Amarillo cubre del 50% al 75%
+              const greenWidth = Math.min(Math.max(porcentajeEspecifico - 75, 0), 25); // Verde cubre del 75% al 100%
+
+              console.log('Red Width:', redWidth);
+              console.log('Orange Width:', orangeWidth);
+              console.log('Yellow Width:', yellowWidth);
+              console.log('Green Width:', greenWidth);
+
+              // Actualizamos los anchos de cada segmento
+              segmentRedSmall.style.width = `${redWidth}%`;
+              segmentOrangeSmall.style.width = `${orangeWidth}%`;
+              segmentYellowSmall.style.width = `${yellowWidth}%`;
+              segmentGreenSmall.style.width = `${greenWidth}%`;
+
+              // Aplicamos colores con degrad
+              segmentRedSmall.style.background = `linear-gradient(to right, red ${redWidth}%, orange)`;
+              segmentOrangeSmall.style.background = `linear-gradient(to right, orange ${orangeWidth}%, yellow)`;
+              segmentYellowSmall.style.background = `linear-gradient(to right, yellow ${yellowWidth}%, #deff33)`;
+              segmentGreenSmall.style.background = `linear-gradient(to right, #deff33 ${Math.max(porcentajeEspecifico - 75, 0)}%, #9bff33)`;
+          }
+
+          function actualizarPosicionFlecha(porcentajeEspecifico) {
+            const flechaContainer = document.querySelector(".flecha-container");
+            const progressBarHeight = 300; // Altura total de la barra de progreso
+            const flechaTopPosition = progressBarHeight - (porcentajeEspecifico / 100) * progressBarHeight;
+
+            flechaContainer.style.top = `${flechaTopPosition}px`;
+        }
+
+
+
+          function actualizarColorFlecha(porcentajeEspecifico) {
+            const flechaIcon = document.getElementById("flecha");
+            const labelEstado = document.getElementById("labelEstado");
+            const textoFlecha = document.getElementById("textoFlecha");
+
+            if (porcentajeEspecifico <= 25) {
+                textoFlecha.textContent = "Está en Mal"; // Texto sobre la flecha
+            } else if (porcentajeEspecifico > 25 && porcentajeEspecifico <= 50) {
+                textoFlecha.textContent = "Está Regular ";
+            } else if (porcentajeEspecifico > 50 && porcentajeEspecifico <= 60) {
+                textoFlecha.textContent = "Regular";
+            } else if (porcentajeEspecifico > 60) {
+                textoFlecha.textContent = "Usted está en Excelente";
+            }
+        }
+
+          // Maneja el botón de "Comenzar"
+          btnStart.addEventListener("click", function () {
+              carousel.next(); // Avanza al siguiente slide
+              btnStart.disabled = true; // Desactiva el botón después de usarlo
+          });
+
+                // Maneja las respuestas
+                  const respuestaButtons = document.querySelectorAll(".respuesta-button");
+                  respuestaButtons.forEach((button) => {
+                      button.addEventListener("click", function () {
+                          const activeSlide = document.querySelector(".carousel-item.active");
+                          const activeSlideId = activeSlide.getAttribute("id");
+
+                          // Marca la respuesta seleccionada
+                          const allButtons = activeSlide.querySelectorAll(".respuesta-button");
+                          allButtons.forEach(btn => btn.classList.remove("selected")); // Remueve cualquier selección previa
+                          this.classList.add("selected"); // Marca la opción seleccionada
+
+                          // Obtiene el id del botón seleccionado
+                          const respuestaId = this.getAttribute("id");
+
+                          // Si la pregunta es específica, la respuesta pertenece a las respuestas específicas y no ha sido respondida
+                          if (preguntasEspecificas.includes(activeSlideId) && respuestasEspecificas.includes(respuestaId) && !respuestasRegistradas[activeSlideId]) {
+                              progressEspecificas++;
+                              respuestasRegistradas[activeSlideId] = true; // Marca la pregunta como contestada
+                              calcularPorcentajeFinal();
+                          }
+
+                          // Avanza al siguiente slide después de seleccionar una respuesta
+                          setTimeout(() => {
+                              carousel.next();
+                          }, 100); // Retraso de 300 ms para dar tiempo a que se vea la selección
+                      });
+                  });
+
+            // Prevenir el cambio de slide si no se ha seleccionado una respuesta
+            document.getElementById('carouselExampleFade').addEventListener('slide.bs.carousel', function (event) {
+                const activeSlide = document.querySelector(".carousel-item.active");
+                const buttons = activeSlide.querySelectorAll(".respuesta-button");
+
+                // Si es la pantalla de "Comenzar", permite avanzar
+                if (activeSlide.getAttribute("id") === "primero") {
+                    return;
+                }
+
+                // Verificar si alguna respuesta ha sido seleccionada
+                const hasSelected = Array.from(buttons).some(button => button.classList.contains("selected"));
+
+                if (!hasSelected) {
+                    event.preventDefault(); // Evita el avance si no hay selección
+                    alert("Por favor, selecciona una respuesta antes de avanzar.");
+                }
+            });
+
+            //APARTADO PARA OCULTAR BARRA
+            document.getElementById('carouselExampleFade').addEventListener('slid.bs.carousel', function (event) {
+                // Selecciona el item activo actual
+                var activeItem = document.querySelector('.carousel-item.active');
+
+                // Verifica si el item activo está dentro del contenedor 'questionario'
+                if (activeItem.closest('.questionario')) {
+                    // Muestra el contenedor y asegura que la posición se mantenga centrada
+                    document.getElementById('progressBarWrapper').style.display = 'flex'; // Usa 'flex' para mantener el centrado
+                    document.getElementById('progressBarWrapper').style.justifyContent = 'center';
+                    document.getElementById('progressBarWrapper').style.alignItems = 'center';
+                } else {
+                    // Oculta el contenedor si no está dentro de 'questionario'
+                    document.getElementById('progressBarWrapper').style.display = 'none';
+                }
+            });
+
+          
+      });
+    </script>
+</body>
+</html>

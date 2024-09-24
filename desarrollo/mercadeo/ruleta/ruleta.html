@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ruleta de 12 Fracciones</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+    />
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background: linear-gradient(to right, #01203a, #0b72b5);
+        font-family: "Montserrat", sans-serif;
+        color: #333;
+        text-align: center;
+        overflow: hidden;
+      }
+
+      h1 {
+        font-style: italic;
+        margin: 0 0 20px;
+        color: #1b1f22;
+      }
+
+      .welcome-screen {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        color: #dfe7ee;
+        transition: opacity 0.5s ease;
+        z-index: 2;
+      }
+
+      .img-SL {
+        width: 350px;
+        padding-bottom: 60px;
+      }
+
+      .img-SL1 {
+        width: 80%;
+        margin-bottom: 10%;
+        margin-top: 10%;
+        padding: 0.5%;
+      }
+
+      .wheel-container {
+        display: none;
+        position: relative;
+        width: 900px;
+        height: 97%;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        border-radius: 20px;
+        overflow: hidden;
+        background-color: white;
+      }
+
+      canvas {
+        border-radius: 50%;
+        margin-top: -5%;
+        scale: 85%;
+      }
+
+      .button-cont {
+        position: fixed;
+        width: 900px;
+        height: 7%;
+        margin: 0;
+        bottom: 7%;
+      }
+
+      .indicator {
+        position: absolute;
+        top: 30px;
+        left: 50%;
+        transform: translateX(-50%) rotate(180deg);
+        width: 0;
+        height: 0;
+        border-left: 12px solid transparent;
+        border-right: 12px solid transparent;
+        border-bottom: 25px solid #ffce56;
+        z-index: 1;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 1.2rem;
+        background-color: #ffce56;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      button:hover {
+        background-color: #ffc107;
+        transform: translateY(-2px);
+      }
+
+      .start-button {
+        margin-top: 20px;
+      }
+
+      .spin-button {
+        margin: 0;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+      }
+
+      .modal-content {
+        background-color: #01203a;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .modal-content::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        opacity: 0.2;
+        z-index: 0;
+      }
+
+      .modal-content > * {
+        position: relative;
+        z-index: 1;
+        
+      }
+
+      .close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        font-size: 1.5rem;
+        color: #285472;
+      }
+
+      .confetti {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        opacity: 0.8;
+      }
+
+      #modal-text {
+        font-size: 24px; /* Tamaño de fuente aumentado */
+        font-weight: bold; /* Negrita */
+        margin-top: 20px;
+        color: #dfe7ee;
+        text-align: center; /* Centrar texto */
+      }
+
+      /* ESPACIO PARA ESTILOS RESPONSIVOS */
+
+      @media (min-width: 2000px) and (max-width: 2800px) {
+
+        body {
+          width: 100svw;
+          height: 100svh;
+          overflow: hidden;
+        }
+
+        .welcome-screen {
+          scale: 200%;
+          overflow: hidden;
+        }
+
+        .wheel-container {
+          width: 80%;
+          height: 97%;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .button-cont {
+          width: 80%;
+          margin: 0;
+          bottom: 5%;
+          scale: 250%;
+        }
+        
+        .modal-content {
+          scale: 200%;
+      }
+
+        canvas {
+          position: absolute;
+          transform: translate(-27%, 25%);
+          margin-top: -1%;
+          scale: 180%;
+        }
+
+        .indicator {
+          margin-top: 2%;
+          scale: 200%;
+        }
+
+      }
+
+      @media (min-width: 769px) and (max-width: 1024px) {
+
+        .button-cont {
+          bottom: 1%;
+        }
+
+        canvas {
+          margin-top: -7%;
+          scale: 80%;
+        }
+
+      }
+
+      @media (min-width: 481px) and (max-width: 768px) {
+
+        body {
+          width: 100svw;
+          height: 100svh;
+          overflow: hidden;
+        }
+
+        .welcome-screen {
+          overflow: hidden;
+        }
+
+        .wheel-container {
+          width: 95%;
+          height: 500px;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .button-cont {
+          width: 95%;
+          margin: 0;
+          bottom: 5%;
+        }
+        
+        canvas {
+          position: absolute;
+          transform: translate(-83%, -25%);
+          margin-top: -1%;
+          scale: 60%;
+        }
+
+      }
+
+      @media (min-width: 318px) and (max-width: 480px) {
+
+        body {
+          width: 100svw;
+          height: 100svh;
+          overflow: hidden;
+        }
+
+        .welcome-screen {
+          overflow: hidden;
+        }
+
+        .wheel-container {
+          width: 95%;
+          height: 500px;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .button-cont {
+          width: 100%;
+          margin: 0;
+          bottom: 5%;
+        }
+        
+        canvas {
+          position: absolute;
+          transform: translate(-110%, -40%);
+          margin-top: -1%;
+          scale: 45%;
+        }
+
+        .indicator {
+          margin-top: 10%;
+        }
+
+      }
+
+    </style>
+  </head>
+  <body>
+
+    <div class="welcome-screen" id="welcome-screen">
+      <img
+        class="img-SL"
+        src="https://static.wixstatic.com/media/a028e9_f785ec04904c477b9c8afdf69c4f3a1b~mv2.png/v1/fill/w_220,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/Hagamos%20Sinergia%20(4).png"
+        alt=""
+      />
+      <h1 style="color: #dfe7ee;">¡Bienvenido a la Ruleta!</h1>
+      <p>Haz clic en el botón de abajo para empezar.</p>
+      <button class="start-button" id="start-button">Comenzar</button>
+    </div>
+
+    <div class="wheel-container" id="wheel-container">
+
+        <canvas id="ruleta" width="800" height="800"></canvas>
+        <div class="indicator"></div>
+        <div class="button-cont"><button class="spin-button" id="spin-button">Girar</button></div>
+    </div>
+
+    <div class="modal" id="modal">
+      <div class="modal-content">
+        <div
+          id="confetti-container"
+          style="position: relative; height: 30px"
+        ></div>
+        <img
+        class="img-SL1"
+        src="https://static.wixstatic.com/media/a028e9_f785ec04904c477b9c8afdf69c4f3a1b~mv2.png/v1/fill/w_220,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/Hagamos%20Sinergia%20(4).png"
+        alt=""
+        />
+        <span class="close" id="close-modal">&times;</span>
+        <p id="modal-text"></p>
+      </div>
+    </div>
+
+    <script>
+      const canvas = document.getElementById("ruleta");
+      const ctx = canvas.getContext("2d");
+      const wheelContainer = document.getElementById("wheel-container");
+      const welcomeScreen = document.getElementById("welcome-screen");
+      const startButton = document.getElementById("start-button");
+      const spinButton = document.getElementById("spin-button");
+      const modal = document.getElementById("modal");
+      const modalText = document.getElementById("modal-text");
+      const closeModal = document.getElementById("close-modal");
+      const confettiContainer = document.getElementById("confetti-container");
+      const totalSections = 10;
+      const colors = [
+        "#FF5733",
+        "#33FF57",
+        "#3357FF",
+        "#F1C40F",
+        "#8E44AD",
+        "#E67E22",
+        "#1ABC9C",
+        "#3498DB",
+        "#2ECC71",
+        "#E74C3C",
+        "#012541",
+        "#F1C40F",
+      ];
+     
+      const prizes = [
+        "Sombrilla + Demo",
+        "Botilito + Demo",
+        "Webinar + Esfero + Agua",
+        "Demo + Esfero + Agua",
+        "Kit + Demo",
+        "Sombrilla + Webinar",
+        "Botilito + Webinar",
+        "Demo + Esfero + Libreta",
+        "Webinar + Libreta + Esfero",
+        "Kit + Webinar",
+      ];
+
+      const countsPerDay = {
+        "Kit + Demo": 0,
+        "Kit + Webinar": 0,
+        "Webinar + Esfero + Agua": 0,
+        "Demo + Esfero + Agua": 0,
+        "Demo + Esfero + Libreta": 0,
+        "Webinar + Libreta + Esfero": 0,
+        "Botilito + Demo": 0,
+        "Botilito + Webinar": 0,
+        "Sombrilla + Webinar": 0,
+        "Sombrilla + Demo": 0,
+      };  
+    
+      const countsPerWeek = { ...countsPerDay };
+
+        function resetCounts() {
+            for (let key in countsPerDay) {
+                countsPerDay[key] = 0;
+            }
+            const today = new Date();
+            if (today.getDay() === 1) { // Lunes
+                for (let key in countsPerWeek) {
+                    countsPerWeek[key] = 0;
+                }
+            }
+        }
+
+        // let simulatedDayOfWeek = 3; // VARIABLE DE SIMULACIÓN
+
+        function canSelectPrize(prize) {
+            const today = new Date();
+            const dayOfWeek = today.getDay(); // PARA OBTENER EL DÍA REAL
+            // const dayOfWeek = simulatedDayOfWeek; // SE USA EN CASO DE PRUEBAS
+
+            if (prize === "Kit + Demo" && dayOfWeek === 4 && countsPerWeek[prize] < 1) return true; // Jueves
+            if (prize === "Kit + Webinar" && dayOfWeek === 5 && countsPerWeek[prize] < 1) return true; // Viernes
+
+            // Lógica para premios con más frecuencia diaria/semanal
+            if (["Webinar + Esfero + Agua", "Demo + Esfero + Agua", "Demo + Esfero + Libreta", "Webinar + Libreta + Esfero", "Botilito + Demo", "Botilito + Webinar"].includes(prize) && countsPerDay[prize] < 10 && countsPerWeek[prize] < 50) return true;
+
+            // Lógica para premios de sombrilla en días específicos
+            if (["Sombrilla + Webinar", "Sombrilla + Demo"].includes(prize) && [3, 4, 5].includes(dayOfWeek) && countsPerDay[prize] < 3 && countsPerWeek[prize] < 9) return true; // Miércoles, Jueves, Viernes
+
+            return false;
+        }
+
+
+        let lastSelectedPrize = null; // Variable para almacenar el último premio seleccionado
+
+        function selectPrizeWithFrequencyControl() {
+          let selectedPrize = null;
+
+          do {
+            selectedPrize = selectNonRepeatingPrize();
+          } while (!canSelectPrize(selectedPrize) || selectedPrize === lastSelectedPrize); // Evitar premio consecutivo
+          
+          // Incrementar contador
+          countsPerDay[selectedPrize]++;
+          countsPerWeek[selectedPrize]++;
+
+          // Actualiza el último premio seleccionado
+          lastSelectedPrize = selectedPrize;
+          
+          return selectedPrize;
+        }
+    
+      function drawWheel() {
+        const arcSize = (2 * Math.PI) / totalSections;
+        const radius = 350;
+    
+        for (let i = 0; i < totalSections; i++) {
+          ctx.beginPath();
+          ctx.moveTo(400, 400);
+          ctx.arc(400, 400, radius, i * arcSize, (i + 1) * arcSize);
+          ctx.closePath();
+          ctx.fillStyle = colors[i % colors.length];
+          ctx.fill();
+          ctx.strokeStyle = "#ffffff";
+          ctx.lineWidth = 5;
+          ctx.stroke();
+    
+          ctx.save();
+          ctx.translate(400, 400);
+          ctx.rotate(i * arcSize + arcSize / 2);
+          ctx.fillStyle = "#FFFFFF";
+          ctx.font = "bold 15.5px Montserrat";
+          ctx.fillText(prizes[i], 120, 0);
+          ctx.restore();
+        }
+    
+        const img = new Image();
+        img.src = 'https://static.wixstatic.com/media/a028e9_f785ec04904c477b9c8afdf69c4f3a1b~mv2.png/v1/fill/w_220,h_66,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/Hagamos%20Sinergia%20(4).png'; 
+        img.onload = function () {
+          const radius = 50; 
+          const imageWidth = 120;
+          const imageHeight = 50;
+    
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(400, 400, radius, 0, Math.PI * 2); // Círculo centrado
+          ctx.fillStyle = '#01203a';
+          ctx.fill();
+          
+          ctx.clip();
+          ctx.drawImage(img, 400 - imageWidth / 2, 400 - imageHeight / 2, imageWidth, imageHeight);
+          ctx.restore(); 
+        };
+      }
+    
+      function spinWheel() {
+        const spinDuration = 3000;
+        const totalRotations = 5;
+        const randomDegree = Math.floor(Math.random() * 360);
+        const arcSize = (360 / totalSections); // Tamaño de cada sección
+        
+        const spinAnimation = (startTime) => {
+          const currentTime = Date.now() - startTime;
+          const progress = Math.min(currentTime / spinDuration, 1);
+          const easing = 1 - Math.pow(1 - progress, 3);
+          const rotation = totalRotations * 290 * easing + randomDegree;
+
+          // Dibuja la ruleta con la rotación actual
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          drawWheel();
+          ctx.save();
+          ctx.translate(400, 400);
+          ctx.rotate((rotation * Math.PI) / 180);  // Rotar la ruleta
+          ctx.translate(-400, -400);
+          ctx.drawImage(canvas, 0, 0);
+          ctx.restore();
+
+          // Si la animación no ha terminado, continúa
+          if (progress < 1) {
+            requestAnimationFrame(() => spinAnimation(startTime));
+          } else {
+            // Asegura que el premio caiga en la posición del indicador (parte superior)
+            let adjustedRotation = rotation % 285; // Rotación dentro de 0 a 360 grados
+            
+            // Ajusta la rotación para que el premio quede alineado con el indicador superior
+            let winningIndex = Math.floor((285 - adjustedRotation + (arcSize / 2)) / arcSize) % totalSections;
+            let selectedPrize = prizes[winningIndex];
+
+            
+            while (!canSelectPrize(selectedPrize)) {
+              // Si el premio no es válido, elige otro aleatorio
+              winningIndex = Math.floor(Math.random() * totalSections);
+              selectedPrize = prizes[winningIndex];
+            }
+
+            // Actualiza los contadores diarios y semanales
+            countsPerDay[selectedPrize]++;
+            countsPerWeek[selectedPrize]++;
+
+            // Muestra el modal con el premio seleccionado
+            showModal(`¡Ganaste: ${selectedPrize}!`);
+          }
+        };
+
+        spinAnimation(Date.now());
+      }
+
+    
+      function showModal(message) {
+        modalText.innerText = message;
+        modal.style.display = "flex";
+        createConfetti();
+      }
+    
+      function createConfetti() {
+        const containerWidth = confettiContainer.clientWidth; // Obtener el ancho del contenedor
+
+        for (let i = 0; i < 100; i++) { // Reducir la cantidad de confettis
+          const confetti = document.createElement("div");
+          confetti.className = "confetti";
+          confetti.style.backgroundColor =
+            colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.left = Math.random() * containerWidth + "px"; // Distribuir en todo el ancho
+          confetti.style.top = Math.random() * 100 + "px"; // Aumentar el rango de altura inicial
+          confetti.style.opacity = Math.random();
+          confettiContainer.appendChild(confetti);
+
+          // Cambia la profundidad de caída
+          setTimeout(() => {
+            confetti.style.transform =
+              "translateY(300px) rotate(" + Math.random() * 360 + "deg)"; // Aumentar la distancia de caída
+            confetti.style.transition =
+              "transform 2s ease-out, opacity 2s ease-out";
+          }, 50);
+
+          setTimeout(() => {
+            confetti.remove();
+          }, 2050);
+        }
+      }
+
+    
+      startButton.addEventListener("click", () => {
+        welcomeScreen.style.opacity = "0";
+        setTimeout(() => {
+          welcomeScreen.style.display = "none";
+          wheelContainer.style.display = "block";
+          drawWheel();
+        }, 500);
+      });
+    
+      spinButton.addEventListener("click", () => {
+        spinWheel();
+      });
+    
+      closeModal.addEventListener("click", () => {
+        modal.style.display = "none";
+        confettiContainer.innerHTML = "";
+      });
+    
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+          modal.style.display = "none";
+          confettiContainer.innerHTML = "";
+        }
+      });
+    
+      resetCounts(); // Llama al reset al inicio
+    </script>
+    
+  </body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculadora Prestaciones Sociales en Liquidación de Contrato</title>
+    <link
+        rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+        body {
+            background-color: #fff;
+        }
+
+        h1 {
+            font-weight: 700;
+            color: #01203a;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            transition: background-color 0.3s ease;
+            background-color: #01203a;
+            border-color: #01203a;
+            color: #fff;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #resultado {
+            margin-top: 20px;
+        }
+
+        .currency {
+            color: #01203a;
+        }
+
+        .disclaimer {
+            margin-top: 20px;
+            font-size: 0.875em;
+            color: #555;
+            background-color: #fff;
+            padding: 10px;
+            border-left: 4px solid #f90;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Calculadora Prestaciones Sociales en Liquidación de Contrato</h1>
+        <form id="calculoForm">
+            <div class="form-group">
+                <label for="salario">Salario Base Mensual</label>
+                <input class="form-control" id="salario" required>
+            </div>
+            <div class="form-group">
+                <label for="auxilioTransporte">¿Cuenta con Auxilio de Transporte?</label>
+                <select class="form-control" id="auxilioTransporte" required>
+                    <option value="si">Sí</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="fechaIngreso">Fecha de Ingreso</label>
+                <input class="form-control" id="fechaIngreso" required type="date">
+            </div>
+            <div class="form-group">
+                <label for="fechaRetiro">Fecha de Retiro</label>
+                <input class="form-control" id="fechaRetiro" required type="date">
+            </div>
+            <div class="form-group">
+                <label for="motivo">Motivo de Terminación</label>
+                <select class="form-control" id="motivo" required>
+                    <option value="terminacion">Terminación de Contrato</option>
+                    <option value="justa">Despido por Justa Causa</option>
+                    <option value="injusta">Despido sin Justa Causa</option>
+                </select>
+            </div>
+            <div class="disclaimer">
+                <strong>Disclaimer:</strong> Los cálculos generados por esta herramienta no representan ninguna responsabilidad de Sinergy & Lowells. Los resultados reales pueden variar según una cantidad de escenarios no contemplados.
+            </div>
+            <button class="btn btn-block btn-primary" style="background-color: #01203a; border-color: #01203a;" type="submit">Calcular</button>
+        </form>
+        <div class="mt-4" id="resultado"></div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Formatear el número con separadores de miles al ingresar salario o auxilio de transporte
+            $('#salario').on('input', function () {
+                let valor = this.value.replace(/\D/g, ''); // Eliminar caracteres no numéricos
+                if (valor) {
+                    this.value = parseFloat(valor).toLocaleString('es-CO'); // Formatear número con separador de miles
+                }
+            });
+    
+            const datosAnuales = {
+                2024: { auxilioTransporte: 162000 },
+                2023: { auxilioTransporte: 140606 },
+                2022: { auxilioTransporte: 117172 },
+                2021: { auxilioTransporte: 106454 },
+            };
+    
+            $('#calculoForm').on('submit', function (e) {
+                e.preventDefault();
+    
+                // Obtener los valores del formulario
+                let salario = parseFloat($('#salario').val().replace(/\./g, '').replace(',', '.')); // Convertir formato
+                let fechaIngreso = new Date($('#fechaIngreso').val());
+                let fechaRetiro = new Date($('#fechaRetiro').val());
+                let motivo = $('#motivo').val();
+                let auxilioTransporteSeleccionado = $('#auxilioTransporte').val();
+    
+                // Función para obtener el valor del Auxilio de Transporte según el año de retiro
+                function obtenerDatAnualesFecha(fechaRetiro) {
+                    const anio = (fechaRetiro.getFullYear());
+                    return datosAnuales[anio] || datosAnuales[2024]; // Si no hay datos para el año, usa el más reciente (2024)
+                }
+    
+                function calcularDiasEntreFechas(fechaInicio, fechaFin) {
+                    // Obtener los años, meses y días de cada fecha
+                    const anioInicio = fechaInicio.getFullYear();
+                    const mesInicio = fechaInicio.getMonth();  // 0-indexado: enero es 0
+                    const diaInicio = fechaInicio.getDate() + 1;
+
+                    const anioFin = fechaFin.getFullYear();
+                    const mesFin = fechaFin.getMonth();
+                    const diaFin = fechaFin.getDate() + 1;
+
+                    // Calcular los días totales basados en el año laboral de 360 días
+                    const totalDiasInicio = (anioInicio * 360) + (mesInicio * 30) + Math.min(diaInicio, 30);
+                    const totalDiasFin = (anioFin * 360) + (mesFin * 30) + Math.min(diaFin, 30);
+
+                    // Diferencia de días entre las fechas normalizadas
+                    return totalDiasFin - totalDiasInicio;
+                }
+
+    
+                if (fechaIngreso > fechaRetiro) {
+                    alert('La fecha de retiro no puede ser anterior a la fecha de ingreso.');
+                    return;
+                }
+    
+                // Obtener el auxilio de transporte correspondiente al año de retiro
+                let auxilioTransporte = obtenerDatAnualesFecha(fechaRetiro).auxilioTransporte;
+    
+                // Si seleccionan 'No' en auxilio de transporte, ajusta a 0
+                if (auxilioTransporteSeleccionado === 'no') {
+                    auxilioTransporte = 0;
+                }
+                
+                let diasTrabajados = calcularDiasEntreFechas(fechaIngreso, fechaRetiro);
+
+                // Calcular prima para cada periodo de forma precisa
+                function calcularPrima(fechaInicio, fechaFin) {
+                    let fechaInicioP1 = new Date(fechaInicio.getFullYear(), 0, 1); // 1 de enero
+                    let fechaFinP1 = new Date(fechaFin.getFullYear(), 5, 30); // 30 de junio
+                    let fechaInicioP2 = new Date(fechaInicio.getFullYear(), 6, 1); // 1 de julio
+                    let fechaFinP2 = new Date(fechaFin.getFullYear(), 11, 31); // 31 de diciembre
+    
+                    let diasPrimaP1 = 0, diasPrimaP2 = 0;
+                    let primaP1 = 0, primaP2 = 0;
+    
+                    // Cálculo de días en el primer semestre (enero-junio)
+                    if (fechaIngreso <= fechaFinP1 && fechaRetiro >= fechaInicioP1) {
+                        let inicio = new Date(Math.max(fechaIngreso, fechaInicioP1));
+                        let fin = new Date(Math.min(fechaRetiro, fechaFinP1));
+                        diasPrimaP1 = calcularDiasEntreFechas(inicio, fin);
+                        primaP1 = (salario + auxilioTransporte) * diasPrimaP1 / 360;
+                    }
+    
+                    // Cálculo de días en el segundo semestre (julio-diciembre)
+                    if (fechaIngreso <= fechaFinP2 && fechaRetiro >= fechaInicioP2) {
+                        let inicio = new Date(Math.max(fechaIngreso, fechaInicioP2));
+                        let fin = new Date(Math.min(fechaRetiro, fechaFinP2));
+                        diasPrimaP2 = diasTrabajados - diasPrimaP1;
+                        primaP2 = (salario + auxilioTransporte) * diasPrimaP2 / 360;
+                    }
+    
+                    let primaFinal;
+                    if (fechaFin <= fechaFinP1) {
+                        primaFinal = primaP1; // Mostrar solo prima de enero a junio
+                    } else if (fechaInicio >= fechaInicioP1 && fechaFin >= fechaFinP1) {
+                        primaFinal = primaP2; // Mostrar solo prima de julio a diciembre
+                    } else {
+                        primaFinal = primaP2; // Mostrar solo prima de julio a diciembre
+                    }
+
+                    return {
+                        primaFinal: primaFinal,
+                        diasPrimaP1: diasPrimaP1,
+                        diasPrimaP2: diasPrimaP2
+                    };
+                }
+    
+                // Cálculos de prestaciones
+                let { primaFinal, diasPrimaP1, diasPrimaP2 } = calcularPrima(fechaIngreso, fechaRetiro);
+                let cesantias = (salario + auxilioTransporte) * diasTrabajados / 360;
+                let interesesCesantias = (cesantias * diasTrabajados * 0.12) / 360;
+                let vacaciones = salario * diasTrabajados / 720;
+                let totalLiq = cesantias + interesesCesantias + primaFinal + vacaciones;
+                let indemnizacion = 0;
+    
+                if (motivo === 'injusta') {
+                    indemnizacion = salario; // Indemnización por despido sin justa causa
+                    totalLiq += indemnizacion;
+                }
+
+                // Mostrar los resultados
+                let resultadoHTML = `
+                    <div class="alert alert-info">
+                        ${diasPrimaP1 > 0 && diasPrimaP2 > 0 ? 
+                            `<p><strong>Días Trabajados en Total:</strong> ${diasTrabajados} días</p>
+                            <p><strong>Días Trabajados en el Primer Semestre:</strong> ${diasPrimaP1} días</p>
+                            <p><strong>Días Trabajados en el Segundo Semestre:</strong> ${diasPrimaP2} días</p>` 
+                            : diasPrimaP1 > 0 ? 
+                            `<p><strong>Total Días Trabajados:</strong> ${diasPrimaP1} días</p>` 
+                            : diasPrimaP2 > 0 ?
+                            `<p><strong>Total Días Trabajados:</strong> ${diasPrimaP2} días</p>` 
+                            : ''
+                        }
+                        <p><strong>Cesantías:</strong> <span class="currency">${Math.round(cesantias).toLocaleString('es-CO')}</span></p>
+                        <p><strong>Intereses sobre Cesantías:</strong> <span class="currency">${Math.round(interesesCesantias).toLocaleString('es-CO')}</span></p>
+                        <p><strong>Prima correspondiente a la fecha:</strong> <span class="currency">${Math.round(primaFinal).toLocaleString('es-CO')}</span></p>
+                        <p><strong>Vacaciones:</strong> <span class="currency">${Math.round(vacaciones).toLocaleString('es-CO')}</span></p>
+                        ${motivo === 'injusta' ? `<p><strong>Indemnización Calculada (Sólo en caso de Indefinidos menor a un año):</strong> <span class="currency">${Math.round(indemnizacion).toLocaleString('es-CO')}</span></p>` : ''}
+                        <p><strong>TOTAL DE LIQUIDACIÓN:</strong> <span class="currency"><strong>${Math.round(totalLiq).toLocaleString('es-CO')}</strong></span></p>
+                    </div>
+                `;
+
+                // Mostrar el resultado
+                $('#resultado').html(resultadoHTML);
+
+            });
+        });
+    </script>
+    
+</body>
+</html>
