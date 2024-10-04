@@ -1,0 +1,273 @@
+/* Estilos para Body */
+body {
+    margin: 0;
+    border: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(to right, #eaecee, #f4f6f8);
+    overflow: hidden;
+    overflow-y: visible;
+}
+
+/* Estilos para header */
+header {
+    display: flex;
+    flex-direction: row;
+    position: fixed;
+    width: 100%;
+    height: 90px;
+    margin: 0;
+    background-color: #3b3f42;
+    border-radius: 10px;
+}
+
+.logo {
+    width: 90px;
+    height: 90px;
+    margin-left: 2%;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+}
+
+nav {
+    width: 35%;
+    display: flex;
+    flex-direction: row;
+}
+
+/* Estilos de la barra de navegación */
+.navbar {
+    display: flex;
+    width: 50%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    justify-content: center;
+}
+
+.navbar .nav-links {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    gap: 50px;
+}
+
+.nav-links li {
+    list-style: none;
+}
+
+.nav-links li a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+}
+
+.nav-links li a:hover {
+    color: #b3afcffa;
+}
+
+/* Estilos para el menú hamburguesa */
+.hamburger {
+    display: none; /* No mostrar el ícono en pantallas grandes */
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.hamburger div {
+    width: 100%;
+    height: 3px;
+    background-color: white;
+}
+
+/* Estilos para Main */
+main {
+    display: flex;
+    flex-direction: column;
+    margin-left: 7%;
+    margin-right: 7%;
+}
+
+/* Estilos para las pantallas */
+.home-screen {
+    margin-top: 10%;
+}
+
+.about-screen, .services-screen, .contact-screen {
+    margin-top: 2%;
+}
+
+/* Estilos para Footer */
+footer {
+    width: 100%;
+    height: 180px;
+    display: flex;
+    background-color: #1d1e1f;
+    flex-direction: row;
+    margin-top: 10%;
+    bottom: 1px;
+}
+
+.footer-section {
+    width: 33.3%;
+    color: beige;
+    font-size: 80%;
+    padding: 2%;
+    text-align: center;
+    align-content: center;
+}
+
+.social-icons a {
+    margin: 0 10px;
+    transition: color 0.3s ease;
+    font-size: 250%;
+}
+
+.social-icons a:hover {
+    color: #e5e9ee;
+}
+
+/* Estilos para Formularios */
+form {
+    width: 400px;
+    height: 400px;
+    margin-top: 5%;
+    background-color: #867777;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.808);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2%;
+    margin-left: 3%;
+    margin-right: 3%;
+}
+
+.contact-form {
+    width: 40%;
+    height: auto;
+    margin-top: 2%;
+    padding: 3%;
+    box-shadow:none;
+    border-color: #141413;
+    border-style:dashed;
+    background-color: #f7efef;
+}
+
+label[for="name"],label[for="email"],label[for="subject"],label[for="message"] {
+    color: #2c2e30;
+}
+  
+label {
+    margin-bottom: 2%;
+    color: #c3cad1;
+    text-align: center;
+}
+
+input, select, textarea {
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 15px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+input, select:focus {
+    border-color: #3b3f42;
+    outline: none;
+}
+
+/* Estilos para Titulos y Textos */
+.titulo-cont {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.titulo {
+    margin-top: 1%;
+    margin-left: 2%;
+    margin-right: 2%;
+    text-align: center;
+    color: #070808;
+    font-weight: bolder;
+}
+
+.sub-centrado {
+    text-align: center;
+}
+
+.texto-cont {
+    margin: 2%;
+}
+
+.texto-body {
+    margin: 3%;
+    text-align: justify;
+    line-height: 1.8;
+}
+
+/* Estilos para Imagenes */
+img {
+    margin: 1%;
+    padding: 0%;
+    scale: 90%;
+    border-radius: 10px;
+    z-index: -1;
+}
+
+.img-text {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    text-align: justify;
+    
+}
+
+/* Estilos para Botones */
+button {
+    transition: background-color 0.3s ease;
+    background-color: #bdb497;
+    border-color: #8d8564;
+    padding: 1.5%;
+    border-style:dashed;
+    border-radius: 10px;
+    color: #fff;
+}
+
+button:hover {
+    background-color: #564a8bb9;
+    color: #070808;
+}
+
+.botones-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 20%;
+    margin-top: 1.5%;
+    margin-bottom: 1.5%;
+    right: 1%;
+}
+
+.butt-ini {
+    width: 50%;
+    height: auto;
+    margin: 1%;
+    background-color: transparent;
+    border-color: #e7e6e1;
+    border-style:ridge;
+    border-radius: 10px;
+}
+
+.butt-ini:hover {
+    background-color: #f1effffa;
+    color: #070808;
+}

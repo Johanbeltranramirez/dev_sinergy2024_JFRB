@@ -303,13 +303,14 @@
         
         canvas {
           position: absolute;
-          transform: translate(-110%, -40%);
+          transform: translate(-142%, -50%);
           margin-top: -1%;
-          scale: 45%;
+          scale: 35%;
         }
 
         .indicator {
-          margin-top: 10%;
+          margin-top: 20%;
+          scale: 80%;
         }
 
       }
@@ -381,12 +382,12 @@
      
       const prizes = [
         "Sombrilla + Demo",
-        "Botilito + Demo",
+        "Termo + Demo",
         "Webinar + Esfero + Agua",
         "Demo + Esfero + Agua",
         "Kit + Demo",
         "Sombrilla + Webinar",
-        "Botilito + Webinar",
+        "Termo + Webinar",
         "Demo + Esfero + Libreta",
         "Webinar + Libreta + Esfero",
         "Kit + Webinar",
@@ -399,8 +400,8 @@
         "Demo + Esfero + Agua": 0,
         "Demo + Esfero + Libreta": 0,
         "Webinar + Libreta + Esfero": 0,
-        "Botilito + Demo": 0,
-        "Botilito + Webinar": 0,
+        "Termo + Demo": 0,
+        "Termo + Webinar": 0,
         "Sombrilla + Webinar": 0,
         "Sombrilla + Demo": 0,
       };  
@@ -423,14 +424,14 @@
 
         function canSelectPrize(prize) {
             const today = new Date();
-            const dayOfWeek = today.getDay(); // PARA OBTENER EL DÍA REAL
+            console.log(dayOfWeek = today.getDay()); // PARA OBTENER EL DÍA REAL
             // const dayOfWeek = simulatedDayOfWeek; // SE USA EN CASO DE PRUEBAS
 
             if (prize === "Kit + Demo" && dayOfWeek === 4 && countsPerWeek[prize] < 1) return true; // Jueves
             if (prize === "Kit + Webinar" && dayOfWeek === 5 && countsPerWeek[prize] < 1) return true; // Viernes
 
             // Lógica para premios con más frecuencia diaria/semanal
-            if (["Webinar + Esfero + Agua", "Demo + Esfero + Agua", "Demo + Esfero + Libreta", "Webinar + Libreta + Esfero", "Botilito + Demo", "Botilito + Webinar"].includes(prize) && countsPerDay[prize] < 10 && countsPerWeek[prize] < 50) return true;
+            if (["Webinar + Esfero + Agua", "Demo + Esfero + Agua", "Demo + Esfero + Libreta", "Webinar + Libreta + Esfero", "Termo + Demo", "Termo + Webinar"].includes(prize) && countsPerDay[prize] < 10 && countsPerWeek[prize] < 50) return true;
 
             // Lógica para premios de sombrilla en días específicos
             if (["Sombrilla + Webinar", "Sombrilla + Demo"].includes(prize) && [3, 4, 5].includes(dayOfWeek) && countsPerDay[prize] < 3 && countsPerWeek[prize] < 9) return true; // Miércoles, Jueves, Viernes

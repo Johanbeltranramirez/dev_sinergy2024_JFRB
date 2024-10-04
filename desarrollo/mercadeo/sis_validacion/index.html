@@ -75,7 +75,7 @@
             margin-bottom: 0.5rem;
             cursor: pointer;
             padding: 9px; /* Aumenta el espacio interno de los botones */
-            border: 1px solid; /* Color de borde gris */
+            border: 0; 
             border-radius: 18px;
             background: #aeb2c9; /* Fondo gris claro */
             color: #101438ef; /* Color del texto */
@@ -95,6 +95,7 @@
             margin-bottom: 0.1rem;
             cursor: pointer;
             padding: 12px; /* Aumenta el espacio interno de los botones */
+            border: 0;
             border-radius: 30px;
             background: #479dd6; /* Fondo gris claro */
             color: #ffffff; /* Color del texto */
@@ -522,10 +523,24 @@
                     </div>
                 </div>
                 <div class="questionario" id="questionario">
-                    <div class="carousel-item" id="pre1">
+                    <div class="carousel-item" id="pre0">
                       <div class="p-2">
                         <div class="pregunta">
                           <label class="num-label">1.</label>
+                          <label class="pregunta-label">
+                            ¿Tu empresa utiliza procesos <b>manuales</b> para realizar la gestión de nómina?
+                          </label>
+                        </div>
+                        <div class="botones">
+                          <button class="respuesta-button" id="RC0">Sí</button>
+                          <button class="respuesta-button">No</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="carousel-item" id="pre1">
+                      <div class="p-2">
+                        <div class="pregunta">
+                          <label class="num-label">2.</label>
                           <label class="pregunta-label">
                             ¿El sistema de nómina <b>cumple con las normativas</b>
                             colombianas para el <b>cálculo de impuestos</b>, como la retención en
@@ -541,7 +556,7 @@
                     <div class="carousel-item" id="pre2">
                       <div class="p-2">
                         <div class="pregunta">
-                          <label class="num-label">2.</label>
+                          <label class="num-label">3.</label>
                           <label class="pregunta-label">
                             ¿Existen <b>procedimientos claros para la revisión</b> y
                             validación de la nómina antes de su <b>procesamiento final</b>, según
@@ -557,7 +572,7 @@
                     <div class="carousel-item" id="pre3">
                       <div class="p-2">
                         <div class="pregunta">
-                          <label class="num-label">3.</label>
+                          <label class="num-label">4.</label>
                           <label class="pregunta-label">
                             ¿Existen mecanismos para asegurar que el proceso de nómina
                             se adhiera a las <b>políticas internas</b> y a las <b>normativas
@@ -578,10 +593,10 @@
                     <div class="carousel-item" id="pre4">
                       <div class="p-2">
                         <div class="pregunta">
-                          <label class="num-label">4.</label>
+                          <label class="num-label">5.</label>
                           <label class="pregunta-label">
-                            ¿Qué tipo de capacitación reciben los empleados encargados
-                            del proceso de nómina en <b>relación con el software</b>?
+                            Sobre el <b>software de nómina</b>, ¿Qué tipo de capacitación reciben los empleados encargados
+                            del proceso?
                           </label>
                         </div>
                         <div class="botones">
@@ -598,7 +613,7 @@
                     <div class="carousel-item" id="pre5">
                       <div class="p-2">
                         <div class="pregunta">
-                          <label class="num-label">5.</label>
+                          <label class="num-label">6.</label>
                           <label class="pregunta-label">
                             ¿El sistema de nómina permite el acceso a <b>datos históricos
                             y auditorías de cambios realizados</b>, conforme a la normativa de
@@ -614,7 +629,7 @@
                     <div class="carousel-item" id="pre6">
                       <div class="p-2">
                         <div class="pregunta">
-                          <label class="num-label">6.</label>
+                          <label class="num-label">7.</label>
                           <label class="pregunta-label">
                             ¿En la gestión interna de tu nómina cuentas con <b>procesos
                             auditables</b> que <b>minimicen las probabilidades de sanciones</b>
@@ -630,7 +645,7 @@
                     <div class="carousel-item" id="pre7">
                       <div class="p-2">
                         <div class="pregunta">
-                          <label class="num-label">7.</label>
+                          <label class="num-label">8.</label>
                           <label class="pregunta-label">
                             ¿El sistema de nómina de la empresa está <b>automatizado y
                             adaptado</b> a las normativas colombianas?
@@ -645,7 +660,7 @@
                     <div class="carousel-item" id="pre8">
                       <div class="p-2">
                         <div class="pregunta">
-                          <label class="num-label">8.</label>
+                          <label class="num-label">9.</label>
                           <label class="pregunta-label">
                             ¿Con qué frecuencia se realizan <b>actualizaciones del
                             sistema de nómina</b> para cumplir con los cambios en la
@@ -663,7 +678,7 @@
                     <div class="carousel-item" id="pre9">
                       <div class="p-2">
                         <div class="pregunta">
-                          <label class="num-label">9.</label>
+                          <label class="num-label">10.</label>
                           <label class="pregunta-label">
                             ¿El sistema de nómina <b>integra adecuadamente</b> la información
                             de asistencia y horas trabajadas, conforme a la ley
@@ -722,7 +737,7 @@
                                 la gestión de tu empresa al 100%.
                               </h4>
                           
-                              <a class="botonEnviar" style="margin: 20px auto; text-align: center;" target="_blank" href="https://www.sinergylowells.com/calculadoras-liquidacioon-laboral-calcular-ibc">
+                              <a class="botonEnviar" style="margin: 20px auto; text-align: center;" target="_blank" href="https://www.sinergylowells.com/software-de-nomina-demo">
                                 Demo
                               </a>
                             </div>
@@ -764,17 +779,20 @@
             keyboard: false   // Evita el avance con el teclado
         });
 
-        const preguntasEspecificas = ['pre1', 'pre2', 'pre3', 'pre5', 'pre9'];
-        const respuestasEspecificas = ['RC1', 'RC2', 'RC3', 'RC33', 'RC5', 'RC9']; //ID de respuestas a correctas
-        const porcentajePorPregunta = 12;
+        const preguntasEspecificas = ['pre0', 'pre1', 'pre2', 'pre3', 'pre5', 'pre9'];
+        const respuestasEspecificas = ['RC0', 'RC1', 'RC2', 'RC3', 'RC33', 'RC5', 'RC9']; //ID de respuestas a correctas
+        const porcentajePorPregunta = 10;
+        const totalPreguntas = 10;
         let progressEspecificas = 0;
         let respuestasRegistradas = {}; // Para almacenar las respuestas ya registradas
+        let progresoTotal = 0; // Para almacenar las respuestas ya registradas
 
         function calcularPorcentajeFinal() {
             const porcentajeEspecifico = (progressEspecificas * porcentajePorPregunta);
+            const porcentajeTotal = (progresoTotal / totalPreguntas) * 100; // Progreso total para la barra pequeña
             document.getElementById("porcentajeFinal").innerText = `${Math.min(porcentajeEspecifico, 100)}%`;
             actualizarBarraDeProgreso(porcentajeEspecifico);
-            actualizarBarraDeProgresoSmall(porcentajeEspecifico);
+            actualizarBarraDeProgresoSmall(porcentajeTotal);
             actualizarColorFlecha(porcentajeEspecifico);
             actualizarPosicionFlecha(porcentajeEspecifico); // Mueve la flecha
         }
@@ -801,16 +819,16 @@
               segmentGreen.style.background = `linear-gradient(to top, #deff33 ${Math.max(porcentajeEspecifico - 55, 0)}%, #9bff33)`;
           }
   
-            function actualizarBarraDeProgresoSmall(porcentajeEspecifico) {
+            function actualizarBarraDeProgresoSmall(porcentajeTotal) {
               const segmentRedSmall = document.getElementById("segment-red-small");
               const segmentOrangeSmall = document.getElementById("segment-orange-small");
               const segmentYellowSmall = document.getElementById("segment-yellow-small");
               const segmentGreenSmall = document.getElementById("segment-green-small");
 
-              const redWidth = Math.min(porcentajeEspecifico, 25); // Rojo cubre los primeros 25%
-              const orangeWidth = Math.min(Math.max(porcentajeEspecifico - 25, 0), 25); // Naranja cubre del 25% al 50%
-              const yellowWidth = Math.min(Math.max(porcentajeEspecifico - 50, 0), 25); // Amarillo cubre del 50% al 75%
-              const greenWidth = Math.min(Math.max(porcentajeEspecifico - 75, 0), 25); // Verde cubre del 75% al 100%
+              const redWidth = Math.min(porcentajeTotal, 25); // Rojo cubre los primeros 25%
+              const orangeWidth = Math.min(Math.max(porcentajeTotal - 25, 0), 25); // Naranja cubre del 25% al 50%
+              const yellowWidth = Math.min(Math.max(porcentajeTotal - 50, 0), 25); // Amarillo cubre del 50% al 75%
+              const greenWidth = Math.min(Math.max(porcentajeTotal - 75, 0), 25); // Verde cubre del 75% al 100%
 
               console.log('Red Width:', redWidth);
               console.log('Orange Width:', orangeWidth);
@@ -827,7 +845,7 @@
               segmentRedSmall.style.background = `linear-gradient(to right, red ${redWidth}%, orange)`;
               segmentOrangeSmall.style.background = `linear-gradient(to right, orange ${orangeWidth}%, yellow)`;
               segmentYellowSmall.style.background = `linear-gradient(to right, yellow ${yellowWidth}%, #deff33)`;
-              segmentGreenSmall.style.background = `linear-gradient(to right, #deff33 ${Math.max(porcentajeEspecifico - 75, 0)}%, #9bff33)`;
+              segmentGreenSmall.style.background = `linear-gradient(to right, #deff33 ${Math.max(porcentajeTotal - 75, 0)}%, #9bff33)`;
           }
 
           function actualizarPosicionFlecha(porcentajeEspecifico) {
@@ -842,7 +860,6 @@
 
           function actualizarColorFlecha(porcentajeEspecifico) {
             const flechaIcon = document.getElementById("flecha");
-            const labelEstado = document.getElementById("labelEstado");
             const textoFlecha = document.getElementById("textoFlecha");
 
             if (porcentajeEspecifico <= 25) {
@@ -863,33 +880,41 @@
           });
 
                 // Maneja las respuestas
-                  const respuestaButtons = document.querySelectorAll(".respuesta-button");
-                  respuestaButtons.forEach((button) => {
-                      button.addEventListener("click", function () {
-                          const activeSlide = document.querySelector(".carousel-item.active");
-                          const activeSlideId = activeSlide.getAttribute("id");
+                const respuestaButtons = document.querySelectorAll(".respuesta-button");
+                respuestaButtons.forEach((button) => {
+                    button.addEventListener("click", function () {
+                        const activeSlide = document.querySelector(".carousel-item.active");
+                        const activeSlideId = activeSlide.getAttribute("id");
 
-                          // Marca la respuesta seleccionada
-                          const allButtons = activeSlide.querySelectorAll(".respuesta-button");
-                          allButtons.forEach(btn => btn.classList.remove("selected")); // Remueve cualquier selección previa
-                          this.classList.add("selected"); // Marca la opción seleccionada
+                        // Marca la respuesta seleccionada
+                        const allButtons = activeSlide.querySelectorAll(".respuesta-button");
+                        allButtons.forEach(btn => btn.classList.remove("selected")); // Remueve cualquier selección previa
+                        this.classList.add("selected"); // Marca la opción seleccionada
 
-                          // Obtiene el id del botón seleccionado
-                          const respuestaId = this.getAttribute("id");
+                        // Obtiene el id del botón seleccionado
+                        const respuestaId = this.getAttribute("id");
 
-                          // Si la pregunta es específica, la respuesta pertenece a las respuestas específicas y no ha sido respondida
-                          if (preguntasEspecificas.includes(activeSlideId) && respuestasEspecificas.includes(respuestaId) && !respuestasRegistradas[activeSlideId]) {
-                              progressEspecificas++;
-                              respuestasRegistradas[activeSlideId] = true; // Marca la pregunta como contestada
-                              calcularPorcentajeFinal();
-                          }
+                        // Si la pregunta es específica, la respuesta pertenece a las respuestas específicas y no ha sido respondida
+                        if (preguntasEspecificas.includes(activeSlideId) && respuestasEspecificas.includes(respuestaId) && !respuestasRegistradas[activeSlideId]) {
+                            progressEspecificas++; // Incrementa el progreso de preguntas específicas
+                        }
 
-                          // Avanza al siguiente slide después de seleccionar una respuesta
-                          setTimeout(() => {
-                              carousel.next();
-                          }, 100); // Retraso de 300 ms para dar tiempo a que se vea la selección
-                      });
-                  });
+                        // Aumenta el progreso total para cualquier pregunta que no haya sido respondida antes
+                        if (!respuestasRegistradas[activeSlideId]) {
+                            progresoTotal++; // Incrementa el progreso total basado en todas las preguntas
+                            respuestasRegistradas[activeSlideId] = true; // Marca la pregunta como contestada
+                        }
+
+                        // Calcula los porcentajes actualizados
+                        calcularPorcentajeFinal();
+
+                        // Avanza al siguiente slide después de seleccionar una respuesta
+                        setTimeout(() => {
+                            carousel.next();
+                        }, 100); // Retraso de 100 ms para dar tiempo a que se vea la selección
+                    });
+                });
+
 
             // Prevenir el cambio de slide si no se ha seleccionado una respuesta
             document.getElementById('carouselExampleFade').addEventListener('slide.bs.carousel', function (event) {
